@@ -32,18 +32,13 @@ func (b *Bot) handleUpdates(updates tgbotapi.UpdatesChannel) {
 			continue
 		}
 
+		if update.Message.IsCommand() {
+			b.handleCommand(update.Message)
+			continue
+		}
+
 		b.handleMessage(update.Message)
 	}
-}
-
-func (b *Bot) handleMessage(message *tgbotapi.Message) {
-	log.Printf("[%s] %s", message.From.UserName, message.Text)
-
-	msg := tgbotapi.NewMessage(message.Chat.ID, message.Text)
-	msg.ReplyToMessageID = message.MessageID
-
-	b.bot.Send(msg)
-
 }
 
 func (b *Bot) initUpdatesChannel() (tgbotapi.UpdatesChannel, error) {
