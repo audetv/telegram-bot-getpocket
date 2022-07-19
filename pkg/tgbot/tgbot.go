@@ -24,6 +24,12 @@ func (b *Bot) Start() error {
 		return err
 	}
 
+	b.handleUpdates(updates)
+
+	return nil
+}
+
+func (b *Bot) handleUpdates(updates tgbotapi.UpdatesChannel) {
 	for update := range updates {
 		if update.Message != nil { // If we got a message
 			log.Printf("[%s] %s", update.Message.From.UserName, update.Message.Text)
@@ -34,6 +40,4 @@ func (b *Bot) Start() error {
 			b.bot.Send(msg)
 		}
 	}
-
-	return nil
 }
