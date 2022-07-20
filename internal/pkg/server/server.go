@@ -15,10 +15,7 @@ type AuthorizationServer struct {
 	redirectURL     string
 }
 
-func NewAuthorizationServer(
-	pocketClient *pocket.Client,
-	tokenRepository tokenstore.TokenRepository,
-	redirectURL string) *AuthorizationServer {
+func NewAuthorizationServer(pocketClient *pocket.Client, tokenRepository tokenstore.TokenRepository, redirectURL string) *AuthorizationServer {
 	return &AuthorizationServer{
 		pocketClient:    pocketClient,
 		tokenRepository: tokenRepository,

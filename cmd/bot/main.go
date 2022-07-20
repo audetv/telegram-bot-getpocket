@@ -3,6 +3,7 @@ package main
 import (
 	"github.com/audetv/telegram-bot-getpocket/internal/db/bbolt/tokenstore"
 	"github.com/audetv/telegram-bot-getpocket/internal/pkg/repos/token"
+	"github.com/audetv/telegram-bot-getpocket/internal/pkg/server"
 	"github.com/audetv/telegram-bot-getpocket/internal/pkg/tgbot"
 	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api"
 	"github.com/zhashkevych/go-pocket-sdk"
@@ -31,8 +32,16 @@ func main() {
 	tokenRepository := tokenstore.NewTokenRepository(db)
 
 	telegramBot := tgbot.NewBot(bot, pocketClient, tokenRepository, "http://localhost/")
-	err = telegramBot.Start()
-	if err != nil {
+
+	authorizationServer := server.NewAuthorizationServer(pocketClient, *tokenRepository, "https://t.me/audetv_getpocket_bot")
+
+	go func() {
+		if err := telegramBot.Start(); err != nil {
+			log.Fatal(err)
+		}
+	}()
+
+	if err := authorizationServer.Start(); err != nil {
 		log.Fatal(err)
 	}
 }
