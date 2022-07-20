@@ -3,6 +3,7 @@ package tgbot
 import (
 	"context"
 	"fmt"
+	"github.com/audetv/telegram-bot-getpocket/internal/pkg/repos/token"
 )
 
 func (b *Bot) generateAuthorizationLink(chatID int64) (string, error) {
@@ -10,6 +11,10 @@ func (b *Bot) generateAuthorizationLink(chatID int64) (string, error) {
 
 	requestToken, err := b.pocketClient.GetRequestToken(context.Background(), b.redirectURL)
 	if err != nil {
+		return "", err
+	}
+
+	if err := b.tokenRepository.Create(chatID, requestToken, token.RequestTokens); err != nil {
 		return "", err
 	}
 
