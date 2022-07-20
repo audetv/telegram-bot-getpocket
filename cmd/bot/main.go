@@ -15,12 +15,12 @@ func main() {
 
 	bot.Debug = true
 
-	pocketClient, err := pocket.NewClient("")
+	pocketClient, err := pocket.NewClient(":consumerKey")
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	telegramBot := tgbot.NewBot(bot, pocketClient)
+	telegramBot := tgbot.NewBot(bot, pocketClient, "http://localhost/")
 	err = telegramBot.Start()
 	if err != nil {
 		log.Fatal(err)

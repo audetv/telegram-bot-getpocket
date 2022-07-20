@@ -1,13 +1,14 @@
 package tgbot
 
 import (
+	"fmt"
 	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api"
 	"log"
 )
 
 const (
-	commandStart = "start"
-	replyStart   = "Привет! Чтобы сохранять ссылки в своем Pocket аккаунте, для начала тебе необходимо дать мне на это доступ. Для этого переходи по ссылке:\n%s"
+	commandStart       = "start"
+	replyStartTemplate = "Привет! Чтобы сохранять ссылки в своем Pocket аккаунте, для начала тебе необходимо дать мне на это доступ. Для этого переходи по ссылке:\n%s"
 )
 
 func (b *Bot) handleCommand(message *tgbotapi.Message) error {
@@ -31,9 +32,14 @@ func (b *Bot) handleMessage(message *tgbotapi.Message) error {
 }
 
 func (b *Bot) handleStartCommand(message *tgbotapi.Message) error {
-	msg := tgbotapi.NewMessage(message.Chat.ID, "Ты ввёл команду /start")
+	authLink, err := b.generateAuthorizationLink(message.Chat.ID)
+	if err != nil {
+		return err
+	}
 
-	_, err := b.bot.Send(msg)
+	msg := tgbotapi.NewMessage(message.Chat.ID, fmt.Sprintf(replyStartTemplate, authLink))
+
+	_, err = b.bot.Send(msg)
 	return err
 }
 
