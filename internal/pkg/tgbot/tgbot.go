@@ -1,22 +1,25 @@
 package tgbot
 
 import (
+	"github.com/audetv/telegram-bot-getpocket/internal/pkg/repos/token"
 	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api"
 	"github.com/zhashkevych/go-pocket-sdk"
 	"log"
 )
 
 type Bot struct {
-	bot          *tgbotapi.BotAPI
-	pocketClient *pocket.Client
-	redirectURL  string
+	bot             *tgbotapi.BotAPI
+	pocketClient    *pocket.Client
+	tokenRepository token.RepositoryInterface
+	redirectURL     string
 }
 
-func NewBot(bot *tgbotapi.BotAPI, pocketClient *pocket.Client, redirectURL string) *Bot {
+func NewBot(bot *tgbotapi.BotAPI, pocketClient *pocket.Client, tr token.RepositoryInterface, redirectURL string) *Bot {
 	return &Bot{
-		bot:          bot,
-		pocketClient: pocketClient,
-		redirectURL:  redirectURL,
+		bot:             bot,
+		pocketClient:    pocketClient,
+		tokenRepository: tr,
+		redirectURL:     redirectURL,
 	}
 }
 
