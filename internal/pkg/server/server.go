@@ -4,6 +4,7 @@ import (
 	"github.com/audetv/telegram-bot-getpocket/internal/db/bbolt/tokenstore"
 	"github.com/audetv/telegram-bot-getpocket/internal/pkg/repos/token"
 	"github.com/zhashkevych/go-pocket-sdk"
+	"log"
 	"net/http"
 	"strconv"
 )
@@ -66,6 +67,8 @@ func (as *AuthorizationServer) ServeHTTP(w http.ResponseWriter, r *http.Request)
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
+
+	log.Printf("chat_id %d\nrequest_token %s\naccess_token %s\n", chatID, requestToken, authResp.AccessToken)
 
 	w.Header().Add("Location", as.redirectURL)
 	w.WriteHeader(http.StatusMovedPermanently)
